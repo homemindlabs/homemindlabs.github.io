@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homemind Labs</title>
+    <style>
+        :root {
+            --bg-color: #0d0d12;
+            --surface-color: #1a1a24;
+            --primary-accent: #00d2ff;
+            --secondary-accent: #3a7bd5;
+            --text-main: #f8f9fa;
+            --text-muted: #a0a0b0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        html { scroll-behavior: smooth; }
+        body { background-color: var(--bg-color); color: var(--text-main); overflow-x: hidden; }
+
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem 5%; background: rgba(13, 13, 18, 0.85); backdrop-filter: blur(12px);
+            position: fixed; width: 100%; top: 0; z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .logo-img { max-height: 80px; filter: invert(1) drop-shadow(0px 0px 8px rgba(0, 210, 255, 0.4)); transition: transform 0.3s ease; }
+        .logo-img:hover { transform: scale(1.05); filter: invert(1) drop-shadow(0px 0px 12px rgba(0, 210, 255, 0.8)); }
+        
+        .nav-links { display: flex; gap: 30px; list-style: none; }
+        .nav-links a { color: var(--text-main); text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
+        .nav-links a:hover { color: var(--primary-accent); }
+
+        section { padding: 120px 5% 60px; max-width: 1200px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+        
+        .hero { align-items: center; text-align: center; background: radial-gradient(circle at center, rgba(58, 123, 213, 0.15) 0%, var(--bg-color) 60%); }
+        .hero h1 { font-size: 5rem; margin-bottom: 1rem; letter-spacing: 2px; min-height: 1.2em; }
+        
+        #typewriter { background: linear-gradient(90deg, var(--text-main), var(--primary-accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .cursor { color: var(--primary-accent); font-family: monospace; font-weight: bold; animation: blink 0.8s step-end infinite; text-shadow: 0px 0px 8px rgba(0, 210, 255, 0.6); }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        .hero p { font-size: 1.2rem; color: var(--text-muted); max-width: 600px; margin-bottom: 2rem; line-height: 1.6; animation: fadeInUp 1s ease-out 1.5s backwards; }
+        .hero .cta-btn { animation: fadeInUp 1s ease-out 1.8s backwards; }
+
+        .cta-btn {
+            display: inline-block; padding: 15px 35px; font-size: 1.1rem; font-weight: 600; color: #fff; text-decoration: none;
+            background: linear-gradient(45deg, var(--primary-accent), var(--secondary-accent)); border: none; border-radius: 30px;
+            cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .cta-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0, 210, 255, 0.3); }
+
+        .section-title { text-align: center; font-size: 3rem; margin-bottom: 10px; background: linear-gradient(90deg, var(--text-main), var(--primary-accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .section-subtitle { text-align: center; color: var(--text-muted); font-size: 1.2rem; margin-bottom: 4rem; }
+
+        .team-grid { display: flex; justify-content: center; gap: 50px; flex-wrap: wrap; }
+        .team-card { background-color: var(--surface-color); padding: 40px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.05); text-align: center; width: 350px; opacity: 0; transform: translateY(30px); transition: all 0.4s ease; }
+        .team-card:hover { border-color: var(--secondary-accent); transform: translateY(-5px) !important; }
+        .team-photo-placeholder { width: 150px; height: 150px; border-radius: 50%; background-color: rgba(26, 26, 36, 0.5); border: 2px dashed rgba(58, 123, 213, 0.5); margin: 0 auto 20px auto; display: flex; justify-content: center; align-items: center; color: var(--text-muted); font-size: 0.9rem; }
+        .team-card h3 { font-size: 1.8rem; color: var(--text-main); margin-bottom: 5px; }
+        .team-card p { color: var(--primary-accent); font-weight: 500; margin-bottom: 15px; }
+        .team-card .bio { color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; }
+
+        footer { text-align: center; padding: 3rem; border-top: 1px solid rgba(255,255,255,0.05); color: var(--text-muted); margin-top: 50px; }
+        .show { opacity: 1; transform: translateY(0); }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo-container">
+            <a href="index.html"><img src="logo-removebg-preview.png" alt="Homemind Labs Logo" class="logo-img"></a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html" style="color: var(--primary-accent);">Home</a></li>
+            <li><a href="helix.html">Products</a></li>
+            <li><a href="#about">About Us</a></li>
+        </ul>
+        <div>
+            <!-- CHANGED: Now points to preorder.html -->
+            <a href="preorder.html" class="cta-btn" style="padding: 10px 25px; font-size: 0.9rem;">Pre-Order</a>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <h1><span id="typewriter"></span><span class="cursor">█</span></h1>
+        <p>Engineering the future of seamless hardware development. Fast, reliable, and integrated by design.</p>
+        <a href="helix.html" class="cta-btn">Discover Helix Alpha</a>
+    </section>
+
+    <section id="about">
+        <h2 class="section-title">About Us</h2>
+        <p class="section-subtitle">Meet the engineers behind Homemind Labs</p>
+        <div class="team-grid">
+            <div class="team-card fade-element">
+                <div class="team-photo-placeholder"></div>
+                <h3>Harish GL</h3>
+                <p>Founder & Head of Hardware</p>
+                <div class="bio">Passionate about democratizing high-performance hardware. Leading the R&D division and focusing on the core architectural integrity of the Helix series.</div>
+            </div>
+            <div class="team-card fade-element">
+                <div class="team-photo-placeholder"></div>
+                <h3>Oliver Johnson</h3>
+                <p>Co-Founder & Head of Software</p>
+                <div class="bio">Specialist in embedded software systems, ensuring that every board is backed by a robust, secure, and developer-friendly firmware stack.</div>
+            </div>
+        </div>
+    </section>
+
+    <footer><p>&copy; 2026 Homemind Labs. Engineered in India.</p></footer>
+
+    <script>
+        const titleText = "HOMEMIND LABS";
+        const typewriterElement = document.getElementById('typewriter');
+        let charIndex = 0;
+        function typeWriter() {
+            if (charIndex < titleText.length) {
+                typewriterElement.textContent += titleText.charAt(charIndex);
+                charIndex++;
+                setTimeout(typeWriter, Math.random() * 100 + 50);
+            }
+        }
+        setTimeout(typeWriter, 500);
+
+        const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) { entry.target.classList.add('show'); obs.unobserve(entry.target); }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-element').forEach((el, index) => { el.style.transitionDelay = `${(index % 2) * 0.15}s`; observer.observe(el); });
+
+        const hero = document.querySelector('.hero');
+        document.addEventListener('mousemove', (e) => {
+            if(window.scrollY < window.innerHeight) {
+                const x = e.clientX / window.innerWidth, y = e.clientY / window.innerHeight;
+                hero.style.background = `radial-gradient(circle at ${x * 100}% ${y * 100}%, rgba(58, 123, 213, 0.15) 0%, var(--bg-color) 60%)`;
+            }
+        });
+    </script>
+</body>
+</html>

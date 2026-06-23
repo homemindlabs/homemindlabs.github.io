@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pre-Order Helix Alpha | Homemind Labs</title>
+    <style>
+        :root {
+            --bg-color: #0d0d12;
+            --surface-color: #1a1a24;
+            --primary-accent: #00d2ff;
+            --secondary-accent: #3a7bd5;
+            --text-main: #f8f9fa;
+            --text-muted: #a0a0b0;
+            --input-bg: rgba(255, 255, 255, 0.03);
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); overflow-x: hidden; }
+
+        /* Navigation */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem 5%; background: rgba(13, 13, 18, 0.85); backdrop-filter: blur(12px);
+            position: fixed; width: 100%; top: 0; z-index: 100; border-bottom: 1px solid var(--border-color);
+        }
+        .logo-img { max-height: 70px; filter: invert(1) drop-shadow(0px 0px 8px rgba(0, 210, 255, 0.4)); transition: transform 0.3s ease; }
+        .logo-img:hover { transform: scale(1.05); filter: invert(1) drop-shadow(0px 0px 12px rgba(0, 210, 255, 0.8)); }
+        
+        .nav-links { display: flex; gap: 30px; list-style: none; }
+        .nav-links a { color: var(--text-main); text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
+        .nav-links a:hover { color: var(--primary-accent); }
+
+        /* E-commerce Layout */
+        .ecommerce-container {
+            padding: 150px 5% 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            min-height: 100vh;
+            align-items: start;
+        }
+
+        /* Left Side: Product Gallery */
+        .product-gallery {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .main-image {
+            width: 100%;
+            height: 450px;
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+        }
+
+        .thumbnail-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .thumbnail {
+            height: 100px;
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: border-color 0.3s;
+            font-size: 0.8rem;
+        }
+
+        .thumbnail:hover, .thumbnail.active {
+            border-color: var(--primary-accent);
+        }
+
+        /* Right Side: Product Details & Checkout */
+        .product-details {
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 1s ease-out 0.2s backwards;
+        }
+
+        .product-title {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            color: var(--text-main);
+            line-height: 1.1;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            background: rgba(0, 210, 255, 0.1);
+            color: var(--primary-accent);
+            border: 1px solid var(--primary-accent);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            width: max-content;
+        }
+
+        .price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--text-main), var(--primary-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+
+        .description {
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+
+        /* Form Styles */
+        .checkout-form {
+            background-color: var(--surface-color);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .form-section-title {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--primary-accent);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
+        }
+
+        .quantity-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .quantity-btn {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .quantity-btn:hover { border-color: var(--primary-accent); color: var(--primary-accent); }
+        
+        .quantity-input {
+            width: 60px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Order Button */
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
+            background: linear-gradient(45deg, var(--primary-accent), var(--secondary-accent));
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 210, 255, 0.3);
+        }
+
+        .shipping-note {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        footer { text-align: center; padding: 3rem; border-top: 1px solid var(--border-color); color: var(--text-muted); margin-top: 50px; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .ecommerce-container { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo-container">
+            <a href="index.html"><img src="logo-removebg-preview.png" alt="Homemind Labs Logo" class="logo-img"></a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="helix.html">Products</a></li>
+            <li><a href="index.html#about">About Us</a></li>
+        </ul>
+        <div><a href="preorder.html" style="text-decoration: none;"><button class="submit-btn" style="padding: 10px 25px; font-size: 0.9rem; margin: 0; width: auto; border-radius: 30px;">Pre-Order</button></a></div>
+    </nav>
+
+    <div class="ecommerce-container">
+        <div class="product-gallery">
+            <div class="main-image">
+                [ Main Board Image (Top Down) ]
+            </div>
+            <div class="thumbnail-row">
+                <div class="thumbnail active">[ Angled View ]</div>
+                <div class="thumbnail">[ Bottom View ]</div>
+                <div class="thumbnail">[ In-Action View ]</div>
+            </div>
+        </div>
+
+        <div class="product-details">
+            <div class="badge">Limited First Run</div>
+            <h1 class="product-title">Helix Alpha</h1>
+            <div class="price">₹1,999</div>
+            <p class="description">Secure your unit from our very first manufacturing run. The ultimate ESP32-S3 development ecosystem with integrated MPU6050, ESD protection, and plug-and-play JST headers.</p>
+
+            <form class="checkout-form" onsubmit="event.preventDefault(); alert('Pre-order submitted! (This is a demo)');">
+                
+                <div class="form-section-title">Quantity</div>
+                <div class="quantity-wrapper">
+                    <button type="button" class="quantity-btn" onclick="document.getElementById('qty').value = Math.max(1, parseInt(document.getElementById('qty').value) - 1)">-</button>
+                    <input type="number" id="qty" class="quantity-input" value="1" min="1" readonly>
+                    <button type="button" class="quantity-btn" onclick="document.getElementById('qty').value = parseInt(document.getElementById('qty').value) + 1">+</button>
+                </div>
+
+                <div class="form-section-title">Shipping Information</div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fname">First Name</label>
+                        <input type="text" id="fname" required placeholder="John">
+                    </div>
+                    <div class="form-group">
+                        <label for="lname">Last Name</label>
+                        <input type="text" id="lname" required placeholder="Doe">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" required placeholder="john@example.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Delivery Address</label>
+                    <textarea id="address" rows="3" required placeholder="Full street address..."></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pin">PIN Code</label>
+                        <input type="text" id="pin" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">Reserve Now</button>
+                <div class="shipping-note">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                    Expected to ship August 2026
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer><p>&copy; 2026 Homemind Labs. Engineered in India.</p></footer>
+
+</body>
+</html>
